@@ -16,18 +16,18 @@ class RegisterForm(Form):
     email = StringField("Email Adresi",validators=[validators.Email(message = "Lütfen Geçerli Bir Email Adresi Girin...")])
     password = PasswordField("Parola:",validators=[validators.DataRequired(message = "Lütfen bir parola belirleyin")])
     confirm = PasswordField("Parola Doğrula",validators=[validators.EqualTo(fieldname = "confirm",message="Parolanız Uyuşmuyor...")])    
-    submit = SubmitField("Giriş")
+    submit = SubmitField("Kayıt ol")
 # Kullanıcı Kayıt Formu
 #login formu
 class LoginForm(Form):
-    username = StringField("Kullanıcı Adı")
-    password = PasswordField("Parola")
-    submit = SubmitField("Giriş")
+    username = StringField("Kullanıcı Adı",validators=[validators.DataRequired(message = "Lütfen kullanıcı adınızı giriniz...")])
+    password = PasswordField("Parola",validators=[validators.DataRequired(message = "Lütfen parolanızı giriniz...")])
+    submit = SubmitField(label="Giriş")
 #login formu
 
 class ArticleAddForm(Form):  
     title = StringField("Yazı başlığı",validators=[validators.Length(min = 5,max = 50),validators.DataRequired(message = "Lütfen bir başlık giriniz...")])
     content = TextAreaField("İçerik",validators=[validators.DataRequired(message = "Lütfen bir yazı girin...")])
-    tags=MultiCheckboxField("Etiketler",choices=[],validators=[validators.DataRequired(message = "Lütfen en az bir etiket giriniz...")])     
+    tags=MultiCheckboxField("Etiketler",choices=[])     
     submit = SubmitField("Kayıt")
 # Kullanıcı Kayıt Formu

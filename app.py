@@ -61,21 +61,16 @@ def login():
             if sha256_crypt.verify(passw,g_passw):
                 session['logged_in'] = True
                 session['username']=name
-                flash("Başarıyla Giriş Yaptınız...","success")
-                return redirect(url_for("index"))
+                return render_template("index.html",durum="Giriş Başarılı")
             else:
-                flash("Parolanızı Yanlış Girdiniz...","danger")
-                return redirect(url_for("login"))                 
+                return render_template("login.html",form = form,durum="parolanızı kontrol ediniz")               
         
-        else:           
+        else:       
             
 
-            flash("Böyle bir kullanıcı bulunmuyor...","danger")
-            
-            return redirect(url_for("login"))
-     
-   
-    return render_template("login.html",form = form)
+            return render_template("login.html",form = form,durum="Böyle bir kullanıcı yok")
+    else:
+        return render_template("login.html",form = form,durum="")
 
 
 @app.route("/logout")
@@ -105,7 +100,7 @@ def article_add():
     form = ArticleAddForm(request.form)
     form.tags.choices=[(tag.name,tag.name) for tag in Tag.query.all()]#[(kullanici.email,kullanici.username) for kullanici in User.query.all()]
     
-    if request.method == "POST" and form.validate():   
+    if request.method == "POST" and form.validate() and len(form.tags.data)>0:   
         time=datetime.utcnow()
         title=form.title.data
         content=form.content.data
@@ -119,21 +114,6 @@ def article_add():
                 
         except Exception as e:
             
-            return render_template("article_add.html",form = form,durum="Hata oluştu"+str(e))     
+            return render_template("article_add.html",form = form,durum="Hata oluştu")     
     else:   
         return render_template("article_add.html",form = form,durum="")
-    
-         
-        # username=form.username.data
-        # password=sha256_crypt.encrypt(form.password.data)
-        # email = form.email.data
-        # yeniKayit=Article(username=username,email=email,password=password,permission=0)
-        # try:
-        #     db.session.add(yeniKayit)
-        #     db.session.commit()
-        #     flash("Kayıt Başarılı","success")
-        #     return redirect(url_for("index"))
-        # except Exception as e:
-        #     flash("Bu Kullanıcı Adı Zaten Kullanılıyor veya kayıt hatası","danger")
-        #     return redirect(url_for("article_add"))
-  
