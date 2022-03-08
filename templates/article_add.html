@@ -6,7 +6,7 @@
     {{ render_field(form.title,class = "form-control") }} {{ render_field(form.content,class = "form-control") }} {{ render_field(form.tags,class = "form-control") }} {{ render_field(form.submit,class="btn btn-primary") }}
 
 </form>
-{% if durum %}
+{{ ckeditor.load() }} {{ ckeditor.config(name='content') }}{% if durum %}
 <div class="alert alert-info">
     <strong>Bilgi!</strong> {{durum}}
 </div> {% endif %}{% endblock %}

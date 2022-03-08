@@ -1,10 +1,11 @@
-from flask import Flask,flash,render_template,Response,request,redirect,url_for,session,logging
+from flask import flash,render_template,Response,request,redirect,url_for,session,logging
 from passlib.hash import sha256_crypt
 from blog import app,db
 from blog.forms import RegisterForm,LoginForm,ArticleAddForm
 from blog.models import User,Tag,Article,Article_Tag
 from functools import wraps
 from datetime import datetime
+
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
     @wraps(f)
@@ -16,11 +17,18 @@ def login_required(f):
             return redirect(url_for("login"))
     return decorated_function
 # Kullanıcı Giriş Decorator'ı
+# etiket listesi getir
+def get_tags():    
+    tags = db.session.query(Tag.name,db.func.count(Article_Tag.tag_name).label("count")).join(Article_Tag,Tag.name==Article_Tag.tag_name,isouter=True).group_by(Tag.name).all()
+    return tags
+# etiket listesi getir
 @app.route("/",methods=["GET","POST"])
 def index():
-    a=request.args.get("a")
+    tags=get_tags()
+    articles = db.session.query(Article).order_by(Article.time.desc()).all()
+    article_tags=db.session.query(Article_Tag).all()  
       
-    return render_template("index.html")
+    return render_template("index.html",tags=tags,articles=articles,article_tags=article_tags)
 
 @app.route("/test")
 def test(): 
@@ -61,7 +69,8 @@ def login():
             if sha256_crypt.verify(passw,g_passw):
                 session['logged_in'] = True
                 session['username']=name
-                return render_template("index.html",durum="Giriş Başarılı")
+                
+                return redirect(url_for("index"))
             else:
                 return render_template("login.html",form = form,durum="parolanızı kontrol ediniz")               
         
@@ -93,7 +102,7 @@ def admin():
     return render_template("admin.html")
 
 
-@app.route("/article_add",methods=["GET","POST"])
+@app.route("/admin/article_add",methods=["GET","POST"])
 @login_required
 def article_add():
     
@@ -110,10 +119,30 @@ def article_add():
             for tag in form.tags.data:
                 db.session.add(Article_Tag(time=time,tag_name=tag))
             db.session.commit()
-            return render_template("article_add.html",form = form,durum="Kayıt eklendi")      
+            form=ArticleAddForm()
+            form.tags.choices=[(tag.name,tag.name) for tag in Tag.query.all()]
+            return render_template("article_add.html",form =form,durum="Kayıt eklendi")      
                 
         except Exception as e:
             
             return render_template("article_add.html",form = form,durum="Hata oluştu")     
     else:   
         return render_template("article_add.html",form = form,durum="")
+
+
+@app.route("/article",methods=["GET","POST"])
+def article():
+    q=request.args.get("q")
+    article=Article.query.filter_by(time=q).first()
+    article_tags=Article_Tag.query.filter_by(time=q).all()
+    
+    return render_template("article.html",article=article,article_tags=article_tags,tags=get_tags())
+
+
+@app.route("/articles/<tag>",methods=["GET","POST"])
+def tags_articles(tag):
+    tags=get_tags()
+    articles = db.session.query(Article).join(Article_Tag, Article.time==Article_Tag.time).filter(Article_Tag.tag_name==tag).order_by(Article.time.desc()).all()
+    article_tags=db.session.query(Article_Tag).all()  
+      
+    return render_template("index.html",tags=tags,articles=articles,article_tags=article_tags)

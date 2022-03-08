@@ -4,105 +4,42 @@
 <div class="card mb-4 ">
     <a href="#! "><img class="card-img-top " src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg " alt="... " /></a>
     <div class="card-body ">
-        <div class="small text-muted ">January 1, 2021</div>
-        <h2 class="card-title ">Featured Post Title</h2>
-        <p class="card-text ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-        <p><a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web Design</a>
-            <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web Design</a>
-            <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web Design</a>
-            <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web Design</a>
+        <div class="small text-muted ">{{ articles[0].time.strftime('%d-%M-%Y Saat: %H:%M') }}</div>
+        <h2 class="card-title ">{{ articles[0].title }}</h2>
+        <p class="card-text ">{{ articles[0].content | safe | truncate(250, True, '...')}} </p>
+        <p>{% for atg in article_tags%} {% if atg.time == articles[0].time %}
+            <a class="badge bg-secondary text-decoration-none link-light " href="/articles/{{atg.tag_name}}">{{atg.tag_name}}</a> {% endif %}{% endfor %}
         </p>
 
 
-        <a class="btn btn-primary " href="#! ">Read more →</a>
+        <a class="btn btn-primary " href="/article?q={{ articles[0].time }}">Devamını oku →</a>
     </div>
 </div>
 
 <!-- Nested row for non-featured blog posts-->
 <div class="row ">
+    <!-- Blog post baş -->
+    {% set i=0 %} {% for article in articles[1:] %} {% if i%2==0 %}
     <div class="col-lg-6 ">
         <!-- Blog post-->
         <div class="card mb-4 ">
-            <a href="#! "><img class="card-img-top " src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg " alt="... " /></a>
+            <a href="/article?q={{ article.time }} "><img class="card-img-top " src="https://dummyimage.com/16:9x1080/f0a.png" alt="... " /></a>
             <div class="card-body ">
-                <div class="small text-muted ">January 1, 2021</div>
-                <h2 class="card-title h4 ">1Post Title</h2>
-                <p class="card-text ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.
+                <div class="small text-muted ">{{ article.time.strftime('%d-%M-%Y Saat: %H:%M') }}</div>
+                <h2 class="card-title h4 ">{{ article.title}}</h2>
+                <p class="card-text ">{{ article.content| safe | truncate(250, True, '...') }} </p>
+                <p>{% for atg in article_tags%} {% if atg.time == article.time %}
+                    <a class="badge bg-secondary text-decoration-none link-light " href="/articles/{{atg.tag_name}}">{{atg.tag_name}}</a> {% endif %}{% endfor %}
                 </p>
-                <p><a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                </p>
-                <a class="btn btn-primary " href="#! ">Read more →</a>
+                <a class="btn btn-primary " href="/article?q={{ article.time }}">Devamını oku →</a>
             </div>
         </div>
-        <!-- Blog post-->
-        <div class="card mb-4 ">
-            <a href="#! "><img class="card-img-top " src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg " alt="... " /></a>
-            <div class="card-body ">
-                <div class="small text-muted ">January 1, 2021</div>
-                <h2 class="card-title h4 ">2Post Title</h2>
-                <p class="card-text ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.
-                </p>
-                <p><a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                </p>
-                <a class="btn btn-primary " href="#! ">Read more →</a>
-            </div>
-        </div>
+
     </div>
-    <div class="col-lg-6 ">
-        <!-- Blog post-->
-        <div class="card mb-4 ">
-            <a href="#! "><img class="card-img-top " src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg " alt="... " /></a>
-            <div class="card-body ">
-                <div class="small text-muted ">January 1, 2021</div>
-                <h2 class="card-title h4 ">3Post Title</h2>
-                <p class="card-text ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.
-                </p>
-                <p><a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                </p>
-                <a class="btn btn-primary " href="#! ">Read more →</a>
-            </div>
-        </div>
-        <!-- Blog post-->
-        <div class="card mb-4 ">
-            <a href="#! "><img class="card-img-top " src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg " alt="... " /></a>
-            <div class="card-body ">
-                <div class="small text-muted ">January 1, 2021</div>
-                <h2 class="card-title h4 ">Post Title</h2>
-                <p class="card-text ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam.</p>
-                <p><a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light " href="#! ">Web
-                            Design</a>
-                </p>
-                <a class="btn btn-primary " href="#! ">Read more →</a>
-            </div>
-        </div>
-    </div>
+    <!-- Blog post son -->
+
+    {% endif %} {% set i=i+1 %} {% endfor %}
+    <!-- Blog post son -->
 </div>
 
 

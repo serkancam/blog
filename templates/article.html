@@ -1,0 +1,23 @@
+{% extends 'layout.html' %} {% block article %} {% from "includes/formhelpers.html" import render_field %}
+<!-- Post content-->
+<article>
+    <!-- Preview image figure-->
+    <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/16:9x1080/f0a.png" alt="..." /></figure>
+    <!-- Post header-->
+    <header class="mb-4">
+        <!-- Post title-->
+        <h1 class="fw-bolder mb-1">{{article.title}}</h1>
+        <!-- Post meta content-->
+        <div class="text-muted fst-italic mb-2">{{article.time.strftime('%d-%M-%Y Saat: %H:%M')}}</div>
+        <!-- Post categories-->
+        <p>
+            {% for atg in article_tags%} {% if atg.time == article.time %}
+            <a class="badge bg-secondary text-decoration-none link-light " href="/articles/{{atg.tag_name}}">{{atg.tag_name}}</a> {% endif %}{% endfor %}
+        </p>
+    </header>
+
+    <!-- Post content-->
+    <section class="mb-5">
+        {{article.content|safe}}
+    </section>
+</article>{% endblock %}
