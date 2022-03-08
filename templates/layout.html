@@ -35,13 +35,22 @@
 
                     {% if session["logged_in"] %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/admin">Admin</a>
+                        <a {% if request.path=="/admin" %}class=" nav-link active" aria-current="page" {% else %}class="nav-link" {% endif %} href="/admin">Admin</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/admin/article_add">yazıekle</a>
+                        <a {% if request.path=="/admin/articles" %}class=" nav-link active" aria-current="page" {% else %}class="nav-link" {% endif %} href="/admin/articles">Yazılar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/logout">
+                        <a {% if request.path=="/admin/tags" %}class=" nav-link active" aria-current="page" {% else %}class="nav-link" {% endif %} href="/admin/tags">Etiketler</a>
+                    </li>
+                    <li class="nav-item">
+                        <a {% if request.path=="/admin/imgs" %}class=" nav-link active" aria-current="page" {% else %}class="nav-link" {% endif %} href="/admin/imgs">Etiketler</a>
+                    </li>
+                    <li class="nav-item">
+                        <a {% if request.path=="/admin/article_add" %}class=" nav-link active" aria-current="page" {% else %}class="nav-link" {% endif %} href="/admin/article_add">yazıekle</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/logout">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
                                     d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
@@ -93,14 +102,19 @@
                 <nav aria-label="Pagination">
                     <hr class="my-0" />
                     <ul class="pagination justify-content-center my-4">
-                        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Yeni</a>
+                        {% set yeni=p-1%}
+                        <li {% if p==1 %}class="page-item disabled" {% else %}class="page-item" {% endif %}><a class="page-link" href="/?p={{yeni}}" tabindex="-1" aria-disabled="true">Yeni</a>
                         </li>
-                        <li class="page-item active" aria-current="page"><a class="page-link" href="#!">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#!">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#!">3</a></li>
-                        <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#!">15</a></li>
-                        <li class="page-item"><a class="page-link" href="#!">Eski</a></li>
+                        {% for i in range(1,page_count+1) %} {% if i==p %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="/?p={{i}}">{{i}}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="/?p={{i}}">{{i}}</a>
+                        </li>
+                        {% endif %} {% endfor %} {% set eski=p+1%}
+                        <li {% if page_count==p %}class="page-item disabled" {% else %}class="page-item" {% endif %}><a class="page-link" href="/?p={{eski}}">Eski</a></li>
                     </ul>
                 </nav>
                 {% endif %}

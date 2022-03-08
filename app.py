@@ -5,6 +5,7 @@ from blog.forms import RegisterForm,LoginForm,ArticleAddForm
 from blog.models import User,Tag,Article,Article_Tag
 from functools import wraps
 from datetime import datetime
+from math import ceil
 
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
@@ -27,8 +28,11 @@ def index():
     tags=get_tags()
     articles = db.session.query(Article).order_by(Article.time.desc()).all()
     article_tags=db.session.query(Article_Tag).all()  
+    page_count=ceil(len(articles)/5)
+    p=request.args.get("p",1,type=int)
+    articles=articles[(p-1)*5:p*5]
       
-    return render_template("index.html",tags=tags,articles=articles,article_tags=article_tags)
+    return render_template("index.html",tags=tags,articles=articles,article_tags=article_tags,page_count=page_count,p=p)
 
 @app.route("/test")
 def test(): 
