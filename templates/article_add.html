@@ -2,8 +2,9 @@
 
 
 
-<form method="post">
-    {{ render_field(form.title,class = "form-control") }} {{ render_field(form.content,class = "form-control") }} {{ render_field(form.tags,class = "form-control") }} {{ render_field(form.submit,class="btn btn-primary") }}
+<form method="POST" action="" enctype="multipart/form-data">
+    {{ render_field(form.title,class = "form-control") }} {{ render_field(form.content,class = "form-control") }} {{ render_field(form.tags,class = "form-control") }} {{ render_field(form.image,class="form-control") }}{{ render_field(form.submit,class="btn
+    btn-primary") }}
 
 </form>
 {{ ckeditor.load() }} {{ ckeditor.config(name='content') }}{% if durum %}

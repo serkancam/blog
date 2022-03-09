@@ -7,6 +7,7 @@ app=Flask(__name__)
 ckeditor=CKEditor()
 
 app.config['CKEDITOR_PKG_TYPE'] = 'full-all'
+app.config["IMAGE_UPLOADS"]="static/img/"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////'+os.path.join(os.getcwd(),"blog.db3")
 app.config['SECRET_KEY']=os.urandom(32)

@@ -1,4 +1,6 @@
-from wtforms import Form,StringField,TextAreaField,PasswordField,validators,SelectField,DateField,IntegerField,SubmitField,SelectMultipleField,widgets
+from wtforms import Form,StringField,PasswordField,validators,SubmitField,SelectMultipleField,widgets,FileField
+
+
 from  flask_ckeditor import CKEditorField
 
 
@@ -15,8 +17,8 @@ class MultiCheckboxField(SelectMultipleField):
 class RegisterForm(Form):   
     username = StringField("Kullanıcı Adı",validators=[validators.Length(min = 5,max = 35)])
     email = StringField("Email Adresi",validators=[validators.Email(message = "Lütfen Geçerli Bir Email Adresi Girin...")])
-    password = PasswordField("Parola:",validators=[validators.DataRequired(message = "Lütfen bir parola belirleyin")])
-    confirm = PasswordField("Parola Doğrula",validators=[validators.EqualTo(fieldname = "confirm",message="Parolanız Uyuşmuyor...")])    
+    password = PasswordField("Parola:",validators=[validators.DataRequired(message = "Lütfen bir parola belirleyin"),validators.EqualTo(fieldname = "confirm",message = "Parolalar Eşleşmiyor...")])
+    confirm = PasswordField("Parola Doğrula",validators=[validators.DataRequired(message = "Lütfen bir parola belirleyin")])
     submit = SubmitField("Kayıt ol")
 # Kullanıcı Kayıt Formu
 #login formu
@@ -29,6 +31,7 @@ class LoginForm(Form):
 class ArticleAddForm(Form):  
     title = StringField("Yazı başlığı",validators=[validators.Length(min = 5,max = 50),validators.DataRequired(message = "Lütfen bir başlık giriniz...")])
     content = CKEditorField("İçerik",validators=[validators.DataRequired(message = "Lütfen bir yazı girin...")])
-    tags=MultiCheckboxField("Etiketler",choices=[])     
+    tags=MultiCheckboxField("Etiketler",choices=[]) 
+    image=FileField("Resim dosyası")
     submit = SubmitField("Kayıt")
 # Kullanıcı Kayıt Formu

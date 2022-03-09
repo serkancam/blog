@@ -6,6 +6,8 @@ from blog.models import User,Tag,Article,Article_Tag
 from functools import wraps
 from datetime import datetime
 from math import ceil
+import os
+from werkzeug.utils import secure_filename
 
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
@@ -111,6 +113,7 @@ def admin():
 def article_add():
     
     form = ArticleAddForm(request.form)
+    
     form.tags.choices=[(tag.name,tag.name) for tag in Tag.query.all()]#[(kullanici.email,kullanici.username) for kullanici in User.query.all()]
     
     if request.method == "POST" and form.validate() and len(form.tags.data)>0:   
@@ -118,18 +121,30 @@ def article_add():
         title=form.title.data
         content=form.content.data
         username=session['username']
+        image_path=""
+       
         try:
-            db.session.add(Article(time=time,title=title,content=content,username=username))
+            image_data = request.files[form.image.name]         
+            if image_data.filename != "":             
+                filename = secure_filename(image_data.filename)
+                image_path=app.config["IMAGE_UPLOADS"]+filename
+                image_data.save(image_path)               
+            else:
+                image_path="static/img/python.png"   
+            
+              
+            db.session.add(Article(time=time,title=title,content=content,username=username,image_path=image_path))
             for tag in form.tags.data:
                 db.session.add(Article_Tag(time=time,tag_name=tag))
             db.session.commit()
             form=ArticleAddForm()
             form.tags.choices=[(tag.name,tag.name) for tag in Tag.query.all()]
+            
             return render_template("article_add.html",form =form,durum="Kayıt eklendi")      
                 
         except Exception as e:
             
-            return render_template("article_add.html",form = form,durum="Hata oluştu")     
+            return render_template("article_add.html",form = form,durum="Hata oluştu"+str(e))     
     else:   
         return render_template("article_add.html",form = form,durum="")
 

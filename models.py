@@ -15,6 +15,7 @@ class Article(db.Model):
     title = db.Column(db.String(80))
     content = db.Column(db.Text)
     username = db.Column(db.String(80),db.ForeignKey('user.username'), nullable=False)    
+    image_path = db.Column(db.String(255))
     tags = db.relationship('Article_Tag', backref='article', lazy='dynamic')
 
 class Tag(db.Model):
