@@ -40,7 +40,6 @@ def index():
 def test(): 
     return render_template("test.html")
 
-
 @app.route("/register",methods=["GET","POST"])
 def register():
     
@@ -69,12 +68,13 @@ def login():
     if request.method=="POST":        
         name = request.form['username']
         passw = request.form['password']        
-        bilgi=User.query.filter_by(username=name).first()       
-        if bilgi is not None:
-            g_passw=bilgi.password
-            if sha256_crypt.verify(passw,g_passw):
+        user=User.query.filter_by(username=name).first()       
+        if user is not None:
+            g_passw=user.password
+            if sha256_crypt.verify(passw,g_passw) :
                 session['logged_in'] = True
                 session['username']=name
+                session["permission"]=user.permission
                 
                 return redirect(url_for("index"))
             else:
@@ -86,7 +86,6 @@ def login():
             return render_template("login.html",form = form,durum="Böyle bir kullanıcı yok")
     else:
         return render_template("login.html",form = form,durum="")
-
 
 @app.route("/logout")
 def logout():
@@ -163,5 +162,37 @@ def tags_articles(tag):
     tags=get_tags()
     articles = db.session.query(Article).join(Article_Tag, Article.time==Article_Tag.time).filter(Article_Tag.tag_name==tag).order_by(Article.time.desc()).all()
     article_tags=db.session.query(Article_Tag).all()  
+    page_count=ceil(len(articles)/5)
+    p=request.args.get("p",1,type=int)
+    articles=articles[(p-1)*5:p*5]
       
-    return render_template("index.html",tags=tags,articles=articles,article_tags=article_tags)
+    return render_template("index.html",tags=tags,articles=articles,article_tags=article_tags,page_count=page_count,p=p)
+
+
+@app.route("/admin/articles",methods=["GET","POST"])
+@login_required
+def admin_articles():
+    tags=get_tags()
+    articles = db.session.query(Article).order_by(Article.time.desc()).all()
+    article_tags=db.session.query(Article_Tag).all()  
+    page_count=ceil(len(articles)/10)
+    p=request.args.get("p",1,type=int)
+    articles=articles[(p-1)*10:p*10]
+      
+    return render_template("article_list.html",tags=tags,articles=articles,article_tags=article_tags,page_count=page_count,p=p)
+
+@app.route("/admin/article_delete",methods=["GET","POST"])
+@login_required
+def admin_article_delete():
+    
+    q=request.args.get("q")
+    p=request.args.get("p")
+
+    if request.args.get("q") and p=="delete":     
+        Article.query.filter_by(time=q).delete()
+        db.session.commit()
+        return redirect(url_for("admin_articles"))  
+    elif request.args.get("q"):
+        article = Article.query.filter_by(time=q).first() 
+        return render_template("article_delete.html",article=article) 
+    

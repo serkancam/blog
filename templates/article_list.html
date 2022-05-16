@@ -1,0 +1,36 @@
+{% extends 'layout.html' %} {% block article %}
+
+<!-- Featured blog post buraya ana sayfa ilk post gelecek-->
+
+
+<!-- Nested row for non-featured blog posts-->
+<div class="row ">
+    <!-- Blog post baş -->
+    {% for article in articles %}
+    <div class="col-lg-6 ">
+        <!-- Blog post-->
+        <div class="card mb-4 ">
+            <!-- <a href="/article?q={{ article.time }} ">
+                <img class="card-img-top " src="{{article.image_path}}" alt="... " />
+            </a> -->
+            <div class="card-body ">
+                <div class="small text-muted ">{{ article.time.strftime('%d-%M-%Y Saat: %H:%M') }}</div>
+                <h2 class="card-title h4 ">{{ article.title}}</h2>
+                <p class="card-text ">{{ article.content| striptags | truncate(250, True, '...') }} </p>
+
+                <a class="btn btn-danger " href="/admin/article_delete?q={{ article.time }}">Sil</a>
+                <a class="btn btn-success " href="/admin/article_update?q={{ article.time }}">Güncelle</a>
+            </div>
+        </div>
+
+    </div>
+    <!-- Blog post son -->
+
+    {% endfor %}
+    <!-- Blog post son -->
+</div>
+
+
+
+
+{% endblock %}

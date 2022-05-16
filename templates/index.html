@@ -2,7 +2,9 @@
 
 <!-- Featured blog post buraya ana sayfa ilk post gelecek-->
 <div class="card mb-4 ">
-    <a href="#! "><img class="card-img-top " src="{{ articles[0].image_path }} " alt="... " /></a>
+    <!-- <a href="#! ">
+        <img class="card-img-top " src="{{ articles[0].image_path }} " alt="... " />
+    </a> -->
     <div class="card-body ">
         <div class="small text-muted ">{{ articles[0].time.strftime('%d-%M-%Y Saat: %H:%M') }}</div>
         <h2 class="card-title ">{{ articles[0].title }}</h2>
@@ -23,7 +25,9 @@
     <div class="col-lg-6 ">
         <!-- Blog post-->
         <div class="card mb-4 ">
-            <a href="/article?q={{ article.time }} "><img class="card-img-top " src="{{article.image_path}}" alt="... " /></a>
+            <!-- <a href="/article?q={{ article.time }} ">
+                <img class="card-img-top " src="{{article.image_path}}" alt="... " />
+            </a> -->
             <div class="card-body ">
                 <div class="small text-muted ">{{ article.time.strftime('%d-%M-%Y Saat: %H:%M') }}</div>
                 <h2 class="card-title h4 ">{{ article.title}}</h2>
