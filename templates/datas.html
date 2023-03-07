@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>jQuery List Example</title>
+
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var list = $('<ul>');
+            for (var i = 1; i <= 10; i++) {
+                list.append($('<li>').text(i));
+            }
+            $('#list-container').append(list);
+        });
+    </script>
+    <div id="list-container"></div>
+</body>

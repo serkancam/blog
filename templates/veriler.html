@@ -1,0 +1,126 @@
+<html>
+
+<head>
+    <title>Flask Database Query Example</title>
+    <style type="text/css">
+        #dv1 {
+            width: 550px;
+            height: 275px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dv1">
+        <canvas id="myChart" width="687" height="343" style="display: block; box-sizing: border-box; height: 275px; width: 550px;"></canvas>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // import Chart from 'chart.js/auto';
+        let myChart = null;
+        $(document).ready(function() {
+            /* function grafikCiz(values) {
+                const ctx = document.getElementById('myChart');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: values.map(function(value, index) {
+                            return index + 1;
+                        }),
+                        datasets: [{
+                            label: 'Nem grafiği',
+                            data: values,
+                            backgroundColor: 'rgba(0, 119, 204, 0.3)',
+                            borderColor: 'rgba(0, 119, 204, 0.8)',
+                            pointBackgroundColor: 'rgba(0, 119, 204, 0.8)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(0, 119, 204, 0.8)'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: false
+                                }
+                            }]
+                        }
+                    }
+                });
+
+
+
+
+
+            } */
+            setInterval(function() {
+                $.ajax({
+                    url: '/query',
+                    success: function(result) {
+                        var values = [];
+                        var values2 = [];
+
+
+                        for (var i = 0; i < result.result.length; i++) {
+                            values.push(result.result[i][0]);
+                            values2.push(result.result[i][1]);
+                        }
+                        console.log(values);
+
+
+                        const ctx = document.getElementById('myChart').getContext('2d');
+                        if (myChart != null) {
+                            myChart.destroy();
+                        }
+
+                        myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: values.map(function(value, index) {
+                                    return index + 1;
+                                }),
+                                datasets: [{
+                                    label: 'Nem grafiği',
+                                    data: values,
+                                    backgroundColor: 'rgba(0, 119, 204, 0.3)',
+                                    borderColor: 'rgba(0, 119, 204, 0.8)',
+                                    pointBackgroundColor: 'rgba(0, 119, 204, 0.8)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(0, 119, 204, 0.8)'
+                                }, {
+                                    label: 'Sıcaklık grafiği',
+                                    data: values2,
+                                    backgroundColor: 'rgba(0, 30, 45, 0.3)',
+                                    borderColor: 'rgba(0, 30, 45, 0.8)',
+                                    pointBackgroundColor: 'rgba(0, 30, 45, 0.8)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(0, 30, 45, 0.8)'
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: false
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+
+                    }
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+
+</html>

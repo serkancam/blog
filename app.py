@@ -1,4 +1,4 @@
-from flask import flash,render_template,Response,request,redirect,url_for,session,logging
+from flask import flash,render_template,Response,request,redirect,url_for,session,logging,jsonify
 from passlib.hash import sha256_crypt
 from blog import app,db
 from blog.forms import RegisterForm,LoginForm,ArticleAddForm
@@ -7,7 +7,9 @@ from functools import wraps
 from datetime import datetime
 from math import ceil
 import os
+import sqlite3
 from werkzeug.utils import secure_filename
+import asyncio
 
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
@@ -195,4 +197,77 @@ def admin_article_delete():
     elif request.args.get("q"):
         article = Article.query.filter_by(time=q).first() 
         return render_template("article_delete.html",article=article) 
+
+#sarp uygulaması eklentiler
+
+@app.route("/degerler",methods=["GET"])
+def degerler():
+    nem="boş"
+    sicaklik="boş"
+    if request.method=="GET":
+        nem = request.args.get("nem")
+        sicaklik =request.args.get("sicaklik")
+        try:
+            db = sqlite3.connect("sarp.db3")
+            cursor=db.cursor()
+            cursor.execute("insert into degerler values(?,?,?)",[None,sicaklik,nem])
+            db.commit()
+            return render_template("degerler.html",nem=nem,sicaklik=sicaklik)
+        except Exception as ex:
+            return render_template("degerler.html",nem="-",sicaklik="-")
+
+        finally:
+            db.close()
+
+@app.route("/veriler")
+def veriler():
+    return render_template("veriler.html")
+
+@app.route("/datas")
+def datas():
+    return render_template("datas.html")
+
+
+# async def my_async_function():
+#     await asyncio.sleep(5)  # örnek olarak 5 saniye bekleyelim
+#     try:
+#         db = sqlite3.connect("sarp.db3")
+#         cursor=db.cursor()
+#         cursor.execute("select * from degerler")
+#         result=cursor.fetchall()    
+#         return result
+#     except Exception as ex:
+#         print(ex) 
+#     finally:
+#         db.close()
     
+#     return "hata"
+
+
+# @app.route("/query")
+# async def async_route():
+#     result = await my_async_function()
+#     return jsonify({"result": result})
+
+
+
+def my_async_function():    
+   
+    try:
+        db = sqlite3.connect("sarp.db3")
+        cursor=db.cursor()
+        cursor.execute("select nem,sicaklik from degerler")
+        result=cursor.fetchall()    
+        return result
+    except Exception as ex:
+        print(ex) 
+    finally:
+        db.close()
+    
+    return "hata"
+
+
+@app.route("/query")
+def async_route():
+    result =  my_async_function()
+    return jsonify({"result": result})
