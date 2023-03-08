@@ -251,8 +251,7 @@ def datas():
 
 
 
-def my_async_function():    
-   
+def veri_cek():    
     try:
         db = sqlite3.connect("sarp.db3")
         cursor=db.cursor()
@@ -269,5 +268,10 @@ def my_async_function():
 
 @app.route("/query")
 def async_route():
-    result =  my_async_function()
+    result =  veri_cek()
     return jsonify({"result": result})
+
+
+if __name__ == "__main__":
+    print("server çalıştı")
+    app.run(debug=True)
